@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dictionary>
+	<Dictionary>
+		<query id="Dictionary_mainQuery">
+			<sql>select o from Dictionary o where 1=1
+				and ( (:name is null or
+				:name ='')
+				or lower(o.name) like
+				concat('%',concat(lower(:name
+				)),'%'))
+				and (
+				(:code is null or :code
+				='')
+				or lower(o.id) like
+				concat(concat(lower(:code )),'%'))
+			</sql>
+			<countsql>select count(o.id) from Dictionary o where 1=1
+				and ( (:name is null or
+				:name ='')
+				or lower(o.name) like
+				concat('%',concat(lower(:name
+				)),'%'))
+				and (
+				(:code is null or :code
+				='')
+				or lower(o.id) like
+				concat(concat(lower(:code )),'%'))
+			</countsql>
+			<!-- orderby 非必要节点 无默认值 -->
+			<orderby>o.id asc</orderby>
+			<parm>
+				<name id="name">
+					<type>String</type>
+				</name>
+				<name id="code">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+	</Dictionary>
+	<Canton>
+		<query id="Canton_mainQuery">
+			<sql>select o from Canton o 
+				where 1=1 and
+				((:wn is null or :wn
+				='') or
+				lower(o.wn) like
+				concat('%',concat(lower(:wn )),'%'))
+				and ((:code is
+				null or :code
+				='')
+				or
+				lower(o.id) like
+				concat('%',concat(lower(:code
+				)),'%'))
+				and ((:name
+				is null or :name
+				='') or
+				lower(o.name) like
+				concat('%',concat(lower(:name )),'%'))
+				and ((:level is null or :level
+				='') or
+				lower(o.level) like
+				concat('%',concat(lower(:level
+				)),'%'))
+			</sql>
+			<countsql>select count(o.id) from Canton o 
+				where 1=1 and ((:wn is
+				null or :wn
+				='') or
+				lower(o.wn) like
+				concat('%',concat(lower(:wn
+				)),'%'))
+				and ((:code is null or :code
+				='')
+				or
+				lower(o.id) like
+				concat('%',concat(lower(:code )),'%'))
+				and
+				((:name is null or :name
+				='') or
+				lower(o.name) like
+				concat('%',concat(lower(:name )),'%'))
+				and ((:level is null or :level
+				='') or
+				lower(o.level) like
+				concat('%',concat(lower(:level
+				)),'%'))
+			</countsql>
+			<orderby>o.id asc</orderby>
+			<parm>
+				<name id="wn">
+					<type>String</type>
+				</name>
+				<name id="code">
+					<type>String</type>
+				</name>
+				<name id="name">
+					<type>String</type>
+				</name>
+				<name id="level">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+	</Canton>
+</dictionary>

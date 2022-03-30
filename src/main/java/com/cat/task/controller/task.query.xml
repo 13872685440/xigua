@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<task>
+	<TaskExt>
+		<query id="findCurrentTask">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>false</isnative>
+			<sql>select o from TaskExt o where 1=1 
+			 and (o.key_value=:key_value) 
+			 and (o.step_id like concat(concat(lower(:task_id)),'%')) 
+			 and (o.taskType in ('待办','已领取','待领取')) order by o.ct desc
+			</sql>
+			<parm>
+				<name id="key_value">
+					<type>String</type>
+				</name>
+				<name id="task_id">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+	</TaskExt>
+	<Comment>
+		<query id="findComment">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>false</isnative>
+			<sql>select o from Comment o where 1=1 
+			 and (o.key_value=:key_value) 
+			 and (o.step_id like concat(concat(lower(:task_id)),'%')) 
+			 order by o.ct asc
+			</sql>
+			<parm>
+				<name id="key_value">
+					<type>String</type>
+				</name>
+				<name id="task_id">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+	</Comment>
+</task>

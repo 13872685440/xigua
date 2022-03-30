@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<task>
+	<ProcessStep>
+		<query id="ProcessStep_mainQuery">
+			<sql>select o from ProcessStep o where 1=1
+				and ( (:name is null or
+				:name ='')
+				or lower(o.name) like
+				concat('%',concat(lower(:name
+				)),'%'))
+				and (
+				(:code is null or :code
+				='')
+				or lower(o.id) like
+				concat(concat(lower(:code )),'%'))
+			</sql>
+			<countsql>select count(o.id) from ProcessStep o where 1=1
+				and ( (:name is null or
+				:name ='')
+				or lower(o.name) like
+				concat('%',concat(lower(:name
+				)),'%'))
+				and (
+				(:code is null or :code
+				='')
+				or lower(o.id) like
+				concat(concat(lower(:code )),'%'))
+			</countsql>
+			<!-- orderby 非必要节点 无默认值 -->
+			<orderby>o.id asc</orderby>
+			<parm>
+				<name id="name">
+					<type>String</type>
+				</name>
+				<name id="code">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+	</ProcessStep>
+	<TaskExt>
+		<query id="TaskExt_mainQuery">
+			<sql>select o from TaskExt o where 1=1 
+				and (((o.taskType in
+				('待办','挂起','已领取'))
+				and
+				((o.transactor = #userId#)))
+				or ((o.taskType in
+				('待领取'))
+				and
+				(o.transactorgroups like
+				concat('%',concat(lower(#userId#)),'%'))))
+			</sql>
+			<countsql>select count(o.id) from TaskExt o where 1=1 
+				and
+				(((o.taskType in
+				('待办','挂起','已领取'))
+				and
+				((o.transactor = #userId#)))
+				or ((o.taskType in
+				('待领取'))
+				and
+				(o.transactorgroups like
+				concat('%',concat(lower(#userId#)),'%'))))
+			</countsql>
+			<!-- orderby 非必要节点 无默认值 -->
+			<orderby>o.ct desc</orderby>
+		</query>
+	</TaskExt>
+</task>

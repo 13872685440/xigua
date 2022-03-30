@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<system>
+	<User>
+		<query id="User_by_username">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>false</isnative>
+			<sql>select o.id as id,o.loginName as username,o.name as name,o.pwd
+				as password,o.salt as salt,o.dictionaryData as status from User o
+				where ((o.loginName =:loginName) or (o.phone = :loginName)) and o.dictionaryData in('1','2')
+			</sql>
+			<parm>
+				<name id="loginName">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+		<query id="User_by_PostInformation">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>true</isnative>
+			<sql>select p.id as id,t.name as name,p.organ_id as code from sys_users t
+				,Org_Post_Information p 
+				where t.id= p.user_id 
+				and p.isleaf in (:leafs)
+			</sql>
+			<parm>
+				<name id="leafs">
+					<type>List</type>
+				</name>
+			</parm>
+		</query>
+		<query id="User_by_OrganAndRole">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>true</isnative>
+			<sql>select t.id as id from sys_users t
+				,Org_Post_Information p ,Org_Information_Post z,org_Post_Role y
+				where t.id= p.user_id and p.id = z.Post_Information_ID and z.post = y.Post 
+				and p.isleaf in ('在职') and ('abcdefg' in (:orgs) or p.organ_Id in (:orgs)) and y.role in (:roles)
+			</sql>
+			<parm>
+				<name id="orgs">
+					<type>List</type>
+				</name>
+				<name id="roles">
+					<type>List</type>
+				</name>
+			</parm>
+		</query>
+	</User>
+	<AppTree>
+		<query id="AppTree_by_Role">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>false</isnative>
+			<sql>select o from AppTree o
+				where (1=1) and (o.id in (select ra.app from RoleApp ra
+				where ra.role in (:roles))) order by o.lxh asc
+			</sql>
+			<parm>
+				<name id="roles">
+					<type>List</type>
+				</name>
+			</parm>
+		</query>
+	</AppTree>
+	<Post>
+		<query id="Post_by_OrganType">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>true</isnative>
+			<sql>select o.id,o.name from Org_Post o
+				where (1=1) and (o.id in (select opo.Post from Org_Post_Orgtype opo,Org_Organ oo
+				where opo.Orgtype_ID =oo.orgtype and oo.id=:orgId)) order by o.id asc
+			</sql>
+			<parm>
+				<name id="orgId">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+		<query id="Role_by_Post">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>true</isnative>
+			<sql>select o.des from SYS_Role o
+				where (1=1) and (o.id in (select oo.role from org_Post_Role oo 
+				where oo.Post in (:ids))) order by o.id asc
+			</sql>
+			<parm>
+				<name id="ids">
+					<type>List</type>
+				</name>
+			</parm>
+		</query>
+	</Post>
+	<Organ>
+		<query id="User_by_Organ">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>false</isnative>
+			<sql>select o from User o
+				where (1=1)
+				and (o.id in (select
+				p.userId from PostInformation p where
+				p.organId=:organId))
+				order by o.name asc
+			</sql>
+			<parm>
+				<name id="organId">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+	</Organ>
+</system>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<demo>
+	<Demo>
+		<query id="Demo_mainQuery">
+			<sql>select o from Demo o where 1=1 and ( (:input is null or
+				:input ='')
+				or lower(o.input) like
+				concat('%',concat(lower(:input
+				)),'%')) and  ( (:demo_tree_id is null or
+				:demo_tree_id ='') or o.demo_tree_id=:demo_tree_id)
+			</sql>
+			<countsql>select count(o.id) from Demo o where 1=1 
+			and ( (:input is null or
+				:input ='')
+				or lower(o.input) like
+				concat('%',concat(lower(:input
+				)),'%')) and  ( (:demo_tree_id is null or
+				:demo_tree_id ='') or o.demo_tree_id=:demo_tree_id)
+			</countsql>
+			<!-- orderby 非必要节点 无默认值 -->
+			<orderby>o.ct desc</orderby>
+			<parm>
+				<name id="input">
+					<type>String</type>
+				</name>
+				<name id="demo_tree_id">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+	</Demo>
+	<DemoTree>
+		<query id="DemoTree_mainQuery">
+			<sql>select o from DemoTree o where 1=1 and (
+				(:code is null or :code
+				='')
+				or lower(o.id) like
+				concat(concat(lower(:code )),'%'))
+			</sql>
+			<countsql>select count(o.id) from DemoTree o where 1=1 
+			and (
+				(:code is null or :code
+				='')
+				or lower(o.id) like
+				concat(concat(lower(:code )),'%'))
+			</countsql>
+			<!-- orderby 非必要节点 无默认值 -->
+			<orderby>o.id asc</orderby>
+			<parm>
+				<name id="code">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+	</DemoTree>
+</demo>

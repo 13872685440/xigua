@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quartz>
+	<!-- <task id="AttenceTableJob">
+		<taskname>生成考勤表任务</taskname>
+		<class>com.cat.quartz.job.AttenceTableJob</class>
+		<cron>0 0/5 * * * ? </cron>
+	</task>
+	<task id="AttenceConditionJob">
+		<taskname>更新考勤表任务</taskname>
+		<class>com.cat.quartz.job.AttenceConditionJob</class>
+		<cron>0 0/30 * * * ? </cron>
+	</task>
+	<task id="SpConditionJob">
+		<taskname>更新审批表任务</taskname>
+		<class>com.cat.quartz.job.SpConditionJob</class>
+		<cron>0 0/30 * * * ? </cron>
+	</task> -->
+</quartz>
