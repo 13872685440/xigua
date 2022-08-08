@@ -49,6 +49,8 @@ public class WebConfigurer implements WebMvcConfigurer {
 		}
 		registry.addInterceptor(authenticationInterceptor).addPathPatterns("/**").excludePathPatterns(s);
 		
-		registry.addInterceptor(whiteListInterceptor).addPathPatterns(s2);
+		if(!StringUtil.isListEmpty(s2)) {
+			registry.addInterceptor(whiteListInterceptor).addPathPatterns(s2);
+		}
 	}
 }

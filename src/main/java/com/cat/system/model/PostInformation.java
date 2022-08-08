@@ -53,7 +53,7 @@ public class PostInformation extends BaseEntity {
 	private String organId;
 	
 	/**
-	 * 在职 离职*/
+	 * 在职 兼职 离职*/
 	@Column(length = 40, nullable = false)
 	private String isleaf;
 	
@@ -75,13 +75,21 @@ public class PostInformation extends BaseEntity {
 	@Column(length = 30)
 	private String leaftime;
 	
-	/** 岗位（多选） */
+	/** 角色 */
 	@ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
-	@JoinTable(name = "Org_Information_Post", joinColumns = {
-			@JoinColumn(name = "Post_Information_ID") }, inverseJoinColumns = { @JoinColumn(name = "post") })
-	@OrderBy("xh")
+	@JoinTable(name = "org_Information_Role", joinColumns = {
+			@JoinColumn(name = "Information") }, inverseJoinColumns = { @JoinColumn(name = "role") })
+	@OrderBy("id")
 	@BatchSize(size = 50)
-	private Set<Post> posts = new HashSet<Post>();
+	private Set<Role> roles = new HashSet<Role>();
+	
+	/** 岗位（多选） */
+	//@ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
+	//@JoinTable(name = "Org_Information_Post", joinColumns = {
+		//	@JoinColumn(name = "Post_Information_ID") }, inverseJoinColumns = { @JoinColumn(name = "post") })
+	//@OrderBy("xh")
+	//@BatchSize(size = 50)
+	//private Set<Post> posts = new HashSet<Post>();
 	
 	@Transient
 	private String userName;
@@ -89,11 +97,17 @@ public class PostInformation extends BaseEntity {
 	@Transient
 	private String organName;
 	
-	@Transient
-	private List<String> post_ls = new ArrayList<String>();
+	//@Transient
+	//private List<String> post_ls = new ArrayList<String>();
+	
+	//@Transient
+	//private List<String> post_names = new ArrayList<String>();
 	
 	@Transient
-	private List<String> post_names = new ArrayList<String>();
+	private List<String> role_ls = new ArrayList<String>();
+	
+	@Transient
+	private List<String> role_names = new ArrayList<String>();
 
 	public String getId() {
 		return id;
@@ -151,14 +165,6 @@ public class PostInformation extends BaseEntity {
 		this.leaftime = leaftime;
 	}
 
-	public Set<Post> getPosts() {
-		return posts;
-	}
-
-	public void setPosts(Set<Post> posts) {
-		this.posts = posts;
-	}
-
 	public String getUserName() {
 		if(!StringUtil.isEmpty(this.userId)) {
 			User o = (User)getService().findById(User.class, this.userId);
@@ -187,32 +193,43 @@ public class PostInformation extends BaseEntity {
 		this.organName = organName;
 	}
 
-	public List<String> getPost_ls() {
-		if(this.posts!=null && !this.posts.isEmpty()) {
-			for (Post d : this.posts) {
-				post_ls.add(d.getId());
+	public Set<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(Set<Role> roles) {
+		this.roles = roles;
+	}
+
+	public List<String> getRole_ls() {
+		if(!StringUtil.isListEmpty(role_ls)) {
+			return role_ls;
+		}
+		if(this.roles!=null && !this.roles.isEmpty()) {
+			for (Role d : this.roles) {
+				role_ls.add(d.getId());
 			}
 		}
-		return post_ls;
+		return role_ls;
 	}
 
-	public void setPost_ls(List<String> post_ls) {
-		this.post_ls = post_ls;
+	public void setRole_ls(List<String> role_ls) {
+		this.role_ls = role_ls;
 	}
-
-	public List<String> getPost_names() {
-		if(this.posts!=null && !this.posts.isEmpty()) {
-			for (Post d : this.posts) {
-				post_names.add(d.getName());
+	
+	public List<String> getRole_names() {
+		if(this.roles!=null && !this.roles.isEmpty()) {
+			for (Role d : this.roles) {
+				role_names.add(d.getDes());
 			}
 		}
-		return post_names;
+		return role_names;
 	}
 
-	public void setPost_names(List<String> post_names) {
-		this.post_names = post_names;
+	public void setRole_names(List<String> role_names) {
+		this.role_names = role_names;
 	}
-
+	
 	@Override
 	public String toString() {
 		return this.id;

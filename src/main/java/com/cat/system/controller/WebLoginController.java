@@ -31,6 +31,7 @@ public class WebLoginController extends LoginController {
 			BaseLoginService service = (BaseLoginService) SpringContextUtil.getBean(token.getService());
 			UserBean bean = service.login(token);
 			if (bean != null) {
+				
 				bean.setService(token.getService());
 				bean.setToken(iniToken(bean));
 				
@@ -57,4 +58,5 @@ public class WebLoginController extends LoginController {
 			jedisUtil.addLoginLog(request, ybean.getUsername(),type);
 		}
 	}
+	
 }

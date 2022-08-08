@@ -1,6 +1,7 @@
 package com.cat.system.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,7 +24,6 @@ import com.cat.boot.util.NameQueryUtil;
 import com.cat.boot.util.StringUtil;
 import com.cat.system.jsonbean.AppTreeInfoBean;
 import com.cat.system.model.AppTree;
-import com.cat.system.model.Post;
 import com.cat.system.model.PostInformation;
 
 @RestController
@@ -53,37 +53,59 @@ public class UserInfoController {
 			if(!StringUtil.isListEmpty(tys)) {
 				userRoles.addAll(tys);
 			}
-			if(jedisUtil.exists("organ_config", RedisConst.config_db)) {
-				JSONObject organ_config = JSONObject.parseObject(jedisUtil.get("organ_config", RedisConst.config_db));
-				if(organ_config.getString("hasOrgan")=="1" && organ_config.getString("hasPost")=="1") {
-					// 查询用户所在机构
-					List<PostInformation> pis = (List<PostInformation>)baseService.
-							getList("PostInformation", "o.ct desc", true,NameQueryUtil.setParams("userId",ybean.getId(),"isleaf","在职"));
-					ybean.getPosts().clear();
-					if(!StringUtil.isListEmpty(pis)) {
-						for (PostInformation pi : pis) {
-							PostBean pb = new PostBean();
-							pb.setPiId(pi.getId());
-							pb.setOrganId(pi.getOrganId());
-							pb.setOrganName(pi.getOrganName());
-							pb.getUserRoles().addAll(userRoles);
-							if(pi.getPosts()!=null && !pi.getPosts().isEmpty()) {
-								pb.setPost_names(StringUtil.listToString(pi.getPost_names()));
-								
-								for (Post p : pi.getPosts()) {
-									pb.getUserRoles().addAll(p.getRole_ls());
-									userRoles.addAll(p.getRole_ls());
-								}
-							}
-							ybean.getPosts().add(pb);
-						}
-					}
-				} else if(organ_config.getString("hasOrgan")=="1" && organ_config.getString("hasPost")=="0") {
-					
-				}
-			} else {
-				return ResultBean.getResultBean("400", "未找到用户配置文件", "未找到用户配置文件");
+			// 查询领导角色
+			List<String> lds = (List<String>)baseService.getList("Sys_User_Role", null, false, "role",NameQueryUtil.setParams("user_ID", ybean.getId()));
+			if(!StringUtil.isListEmpty(lds)) {
+				userRoles.addAll(lds);
 			}
+			// 查询用户所在机构
+			List<PostInformation> pisx = (List<PostInformation>)baseService.
+					getList("PostInformation", "o.ct desc", true,NameQueryUtil.setParams("userId",ybean.getId(),"isleaf",
+							Arrays.asList(new String[] {"LF001","LF002"})));
+			if(!StringUtil.isListEmpty(pisx)) {
+				ybean.getPosts().clear();
+				for (PostInformation p : pisx) {
+					userRoles.addAll(p.getRole_ls());
+					PostBean pb = new PostBean();
+					pb.setPiId(p.getId());
+					pb.setIsleaf(p.getIsleaf());
+					pb.setOrganId(p.getOrganId());
+					pb.setOrganName(p.getOrganName());
+					pb.setPost_names(p.getDuty());
+					ybean.getPosts().add(pb);
+				}
+			}
+//			if(jedisUtil.exists("organ_config", RedisConst.config_db)) {
+//				JSONObject organ_config = JSONObject.parseObject(jedisUtil.get("organ_config", RedisConst.config_db));
+//				if(organ_config.getString("hasOrgan")=="1" && organ_config.getString("hasPost")=="1") {
+//					// 查询用户所在机构
+//					List<PostInformation> pis = (List<PostInformation>)baseService.
+//							getList("PostInformation", "o.ct desc", true,NameQueryUtil.setParams("userId",ybean.getId(),"isleaf","在职"));
+//					ybean.getPosts().clear();
+//					if(!StringUtil.isListEmpty(pis)) {
+//						for (PostInformation pi : pis) {
+//							PostBean pb = new PostBean();
+//							pb.setPiId(pi.getId());
+//							pb.setOrganId(pi.getOrganId());
+//							pb.setOrganName(pi.getOrganName());
+//							pb.getUserRoles().addAll(userRoles);
+//							//if(pi.getPosts()!=null && !pi.getPosts().isEmpty()) {
+//								//pb.setPost_names(StringUtil.listToString(pi.getPost_names()));
+//								
+//								//for (Post p : pi.getPosts()) {
+//								//	pb.getUserRoles().addAll(p.getRole_ls());
+//								//	userRoles.addAll(p.getRole_ls());
+//								//}
+//							//}
+//							ybean.getPosts().add(pb);
+//						}
+//					}
+//				} else if(organ_config.getString("hasOrgan")=="1" && organ_config.getString("hasPost")=="0") {
+//					
+//				}
+//			} else {
+//				return ResultBean.getResultBean("400", "未找到用户配置文件", "未找到用户配置文件");
+//			}
 			
 			// 查询用户角色
 			//List<String> us = (List<String>) baseService.getList("Sys_UserRole", null, true, "id",NameQueryUtil.setParams("ywid", ybean.getId()));

@@ -1,8 +1,11 @@
 package com.cat.system.model;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -26,6 +29,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 
 import com.cat.boot.model.BaseEntity;
+import com.cat.boot.util.NameQueryUtil;
+import com.cat.boot.util.StringUtil;
 
 @Entity
 @Table(name = "SYS_USERS")
@@ -85,6 +90,10 @@ public class User extends BaseEntity {
 	/** 极光推送ID */
 	@Column(length = 50)
 	private String registration_id;
+	
+	/** 本级排序 */
+	@Column
+	private Integer xh = 1;
 
 	@Transient
 	private String tmp111;
@@ -106,6 +115,9 @@ public class User extends BaseEntity {
 	@OrderBy("id")
 	@BatchSize(size = 50)
 	private Set<Role> roles = new HashSet<Role>();
+	
+	@Transient
+	private Map<String,Object> maps = new HashMap<String,Object>();
 	
 	@Transient
 	private List<String> role_ls = new ArrayList<String>();
@@ -272,5 +284,39 @@ public class User extends BaseEntity {
 		this.role_names = role_names;
 	}
 
+	public Integer getXh() {
+		return xh;
+	}
 
+	public void setXh(Integer xh) {
+		this.xh = xh;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getMaps() {
+		String organ_name = "";
+		String duty = "";
+		if(!StringUtil.isEmpty(this.id)) {
+			List<PostInformation> ps = 
+					(List<PostInformation>)getService().getList("PostInformation", "o.isleaf asc", true
+							,NameQueryUtil.setParams("userId",this.id,"isleaf",Arrays.asList(new String[] {
+									"LF001","LF002"
+							})));
+			if(!StringUtil.isListEmpty(ps)) {
+				for (PostInformation postInformation : ps) {
+					organ_name = organ_name + postInformation.getOrganName() + ",";
+					duty = duty + postInformation.getDuty() + ",";
+				}
+				organ_name = StringUtil.removeLast(organ_name);
+				duty = StringUtil.removeLast(duty);
+			}
+		}
+		maps.put("organ_name", organ_name);
+		maps.put("duty", duty);
+		return maps;
+	}
+
+	public void setMaps(Map<String, Object> maps) {
+		this.maps = maps;
+	}
 }

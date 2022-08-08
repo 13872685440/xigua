@@ -13,8 +13,8 @@ import com.cat.boot.jsonbean.ResultBean;
 import com.cat.boot.service.BaseHome;
 import com.cat.boot.util.NameQueryUtil;
 import com.cat.boot.util.StringUtil;
-import com.cat.system.model.Post;
 import com.cat.system.model.PostInformation;
+import com.cat.system.model.Role;
 
 @RestController
 @RequestMapping("/postinformation")
@@ -39,11 +39,11 @@ public class PostInformationHome extends BaseHome<PostInformation>{
 	@Transactional(propagation = Propagation.REQUIRED)
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(PostInformation entity) throws Exception {
-		entity.getPosts().clear();
-		if(!StringUtil.isListEmpty(entity.getPost_ls())) {
-			List<Post> ds = (List<Post>)baseService.getList("Post", null, true,
-					NameQueryUtil.setParams("id",entity.getPost_ls()));
-			entity.getPosts().addAll(ds);
+		entity.getRoles().clear();
+		if(!StringUtil.isListEmpty(entity.getRole_ls())) {
+			List<Role> ds = (List<Role>) baseService.getList("Role", null, true,NameQueryUtil.setParams("id",entity.getRole_ls()));
+					
+			entity.getRoles().addAll(ds);
 		}
 		baseService.save(entity);
 		return ResultBean.getSucess("sucess");

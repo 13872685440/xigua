@@ -20,7 +20,7 @@
 			<sql>select p.id as id,t.name as name,p.organ_id as code from sys_users t
 				,Org_Post_Information p 
 				where t.id= p.user_id 
-				and p.isleaf in (:leafs)
+				and p.isleaf in (:leafs) order by t.xh asc
 			</sql>
 			<parm>
 				<name id="leafs">
@@ -31,10 +31,27 @@
 		<query id="User_by_OrganAndRole">
 			<!-- isnative 非必要节点 默认为false -->
 			<isnative>true</isnative>
+			<sql>select t.id as id,t.name as name,t.phone as phone from sys_users t
+				,Org_Post_Information p ,org_Information_Role y
+				where t.id= p.user_id and p.id = y.Information  
+				and p.isleaf in ('LF001','LF002') and ('abcdefg' in (:orgs) or p.organ_Id in (:orgs)) and y.role in (:roles)
+			</sql>
+			<parm>
+				<name id="orgs">
+					<type>List</type>
+				</name>
+				<name id="roles">
+					<type>List</type>
+				</name>
+			</parm>
+		</query>
+		<query id="User_by_OrganAndRole_ids">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>true</isnative>
 			<sql>select t.id as id from sys_users t
-				,Org_Post_Information p ,Org_Information_Post z,org_Post_Role y
-				where t.id= p.user_id and p.id = z.Post_Information_ID and z.post = y.Post 
-				and p.isleaf in ('在职') and ('abcdefg' in (:orgs) or p.organ_Id in (:orgs)) and y.role in (:roles)
+				,Org_Post_Information p ,org_Information_Role y
+				where t.id= p.user_id and p.id = y.Information  
+				and p.isleaf in ('LF001','LF002') and ('abcdefg' in (:orgs) or p.organ_Id in (:orgs)) and y.role in (:roles)
 			</sql>
 			<parm>
 				<name id="orgs">
@@ -75,19 +92,6 @@
 				</name>
 			</parm>
 		</query>
-		<query id="Role_by_Post">
-			<!-- isnative 非必要节点 默认为false -->
-			<isnative>true</isnative>
-			<sql>select o.des from SYS_Role o
-				where (1=1) and (o.id in (select oo.role from org_Post_Role oo 
-				where oo.Post in (:ids))) order by o.id asc
-			</sql>
-			<parm>
-				<name id="ids">
-					<type>List</type>
-				</name>
-			</parm>
-		</query>
 	</Post>
 	<Organ>
 		<query id="User_by_Organ">
@@ -102,6 +106,38 @@
 			</sql>
 			<parm>
 				<name id="organId">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+		<query id="Role_by_Organ">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>true</isnative>
+			<sql>select o.id,o.des from SYS_Role o
+				where (1=1) and o.r_type in (:r_type) and (o.id in (select oo.role from Sys_Role_Organ oo 
+				where oo.org_id in (:ids))) order by o.id asc
+			</sql>
+			<parm>
+				<name id="r_type">
+					<type>List</type>
+				</name>
+				<name id="ids">
+					<type>List</type>
+				</name>
+			</parm>
+		</query>
+		<query id="Role_by_Organ_Des">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>false</isnative>
+			<sql>select o from Role o
+				where (1=1) and (o.des in (:des)) and o.id in (select x.role from RoleOrgan x
+				 where x.org_id = :orgId) order by o.id asc
+			</sql>
+			<parm>
+				<name id="des">
+					<type>List</type>
+				</name>
+				<name id="orgId">
 					<type>String</type>
 				</name>
 			</parm>

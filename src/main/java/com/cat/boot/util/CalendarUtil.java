@@ -92,6 +92,14 @@ public class CalendarUtil {
 		return df.format(c.getTime());
 	}
 	
+	public static String getYyyyMmDdHHmmss(Calendar c,int t, int i) {
+		if (c == null)
+			return "";
+		c.add(t, i);
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		return df.format(c.getTime());
+	}
+	
 	public static String getYesterday() {
 		Calendar c = Calendar.getInstance();
 		c.add(Calendar.DAY_OF_YEAR, -1);

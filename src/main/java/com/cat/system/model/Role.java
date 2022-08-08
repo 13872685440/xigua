@@ -49,6 +49,12 @@ public class Role extends BaseEntity {
 	
 	@Transient
 	private List<String> app_data_names = new ArrayList<String>();
+	
+	@Transient
+	private List<String> org_data = new ArrayList<String>();
+	
+	@Transient
+	private List<String> org_data_names = new ArrayList<String>();
 
 	public String getId() {
 		return id;
@@ -112,6 +118,42 @@ public class Role extends BaseEntity {
 			}
 		}
 		return app_data_names;
+	}
+
+	public List<String> getOrg_data() {
+		if(!StringUtil.isListEmpty(org_data)) {
+			return org_data;
+		}
+		if(!StringUtil.isEmpty(this.id)) {
+			List<String> app_datas = (List<String>) getService().getList("Sys_Role_Organ", null, true, "org_id",
+				NameQueryUtil.setParams("role", this.id));
+			return app_datas;
+		}
+		return app_data;
+	}
+
+	public void setOrg_data(List<String> org_data) {
+		this.org_data = org_data;
+	}
+
+	public List<String> getOrg_data_names() {
+		if(!StringUtil.isListEmpty(org_data_names)) {
+			return org_data_names;
+		}
+		if(!StringUtil.isEmpty(this.id)) {
+			List<String> app_datas = (List<String>) getService().getList("sys_role_organ", null, true, "org_id",
+				NameQueryUtil.setParams("role", this.id));
+			if(!StringUtil.isListEmpty(app_datas)) {
+				List<String> app_data_name = (List<String>) getService().getList("org_organ", null, true, "name",
+						NameQueryUtil.setParams("id", app_datas));
+				return app_data_name;
+			}
+		}
+		return org_data_names;
+	}
+
+	public void setOrg_data_names(List<String> org_data_names) {
+		this.org_data_names = org_data_names;
 	}
 
 	public void setApp_data_names(List<String> app_data_names) {

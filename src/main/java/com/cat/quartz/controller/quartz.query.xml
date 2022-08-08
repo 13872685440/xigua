@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<quartz>
+	<TaskExt>
+		<query id="TaskExt_Chaoshi">
+			<isnative>false</isnative>
+			<sql>select o from TaskExt o where 1=1 
+			and o.taskType != '已办' and o.time_out is not null and o.time_out&lt;=:dqsj 
+			and o.id not in (select x.task_id from Remind x) order by o.time_out asc
+			</sql>
+			<parm>
+				<name id="dqsj">
+					<type>String</type>
+				</name>
+			</parm>
+		</query>
+	</TaskExt>
+</quartz>

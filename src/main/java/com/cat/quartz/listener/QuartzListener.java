@@ -15,7 +15,7 @@ public class QuartzListener implements ApplicationListener<ApplicationReadyEvent
 
 	@SuppressWarnings("unchecked")
 	private void addJobs() {
-		Map<Object, Object> maps = XmlUtil.parserXml("/com/cat/quartz/job/quartz.config.xml");
+		Map<Object, Object> maps = XmlUtil.parserXml("/com/cat/quartz/controller/quartz.config.xml");
 		if (!StringUtil.isMapEmpty(maps)) {
 			Map<Object, Object> map2s = (Map<Object, Object>) maps.get("quartz");
 			if (!StringUtil.isMapEmpty(map2s)) {

@@ -11,6 +11,8 @@ public class PostBean {
 	
 	private String organName;
 	
+	private String isleaf;
+	
 	private String post_names;
 	
 	private List<String> userRoles = new ArrayList<String>();
@@ -53,5 +55,13 @@ public class PostBean {
 
 	public void setUserRoles(List<String> userRoles) {
 		this.userRoles = userRoles;
+	}
+
+	public String getIsleaf() {
+		return isleaf;
+	}
+
+	public void setIsleaf(String isleaf) {
+		this.isleaf = isleaf;
 	}
 }

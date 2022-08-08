@@ -17,6 +17,7 @@ import com.cat.boot.jsonbean.IResultConvert;
 import com.cat.boot.jsonbean.NameQueryBean;
 import com.cat.boot.jsonbean.QueryFilterBean;
 import com.cat.boot.jsonbean.QueryParamDefineBean;
+import com.cat.boot.util.ExpressUtil;
 import com.cat.boot.util.NameQueryUtil;
 import com.cat.boot.util.StringUtil;
 import com.cat.file.controller.MinioFileController;
@@ -218,6 +219,15 @@ public abstract class BaseQuery<T> implements Serializable {
 			}
 		}
 	}
+	
+	private Boolean elvalue(String elcontext, String el) {
+		if ("BaseQueryHelp".equals(elcontext)) {
+			BaseQueryHelp bqh = this.getQhb();
+			return ExpressUtil.elValue(bqh, el);
+		} else {
+			return ExpressUtil.elValue(this, el);
+		}
+	}
 
 	private boolean elString(String elcontext, String el) {
 		boolean not = false;
@@ -226,11 +236,11 @@ public abstract class BaseQuery<T> implements Serializable {
 			not = true;
 		}
 		// 解析string
-		//if (not) {
+		if (not) {
 			//not = !elvalue(elcontext, el);
-		//} else {
-		//	not = elvalue(elcontext, el);
-		//}
+		} else {
+			not = elvalue(elcontext, el);
+		}
 		if (not) {
 			return true;
 		} else {

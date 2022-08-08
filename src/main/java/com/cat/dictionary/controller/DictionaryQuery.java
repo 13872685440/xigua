@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cat.boot.jsonbean.BaseQueryHelp;
+import com.cat.boot.jsonbean.CheckBean;
 import com.cat.boot.jsonbean.PropParamBean;
 import com.cat.boot.jsonbean.QueryResultBean;
 import com.cat.boot.jsonbean.ResultBean;
@@ -58,5 +59,30 @@ public class DictionaryQuery extends BaseNqtQuery<Dictionary> {
 		beans.add(new PropParamBean("", "and", "scId", "not null"));
 		List<Dictionary> ds = (List<Dictionary>) baseService.getList("Dictionary", "o.xh asc", true, beans);
 		return ResultBean.getSucess(ds);
+	}
+	
+	@RequestMapping(value = "/get_checkbox", method = RequestMethod.GET)
+	public String get_checkbox(DictionaryParmBean bean) {
+		// 查询根目录
+		Dictionary d = (Dictionary) baseService.getSimple("Dictionary", "", true,
+				NameQueryUtil.setParams("typeCode", bean.getTypeCode(), "scId", null));
+		if (d == null) {
+			return ResultBean.getResultBean("400", "查询参数错误", null);
+		}
+		List<PropParamBean> beans = new ArrayList<PropParamBean>();
+		if (!StringUtil.isListEmpty(bean.getFilter())) {
+			beans.add(new PropParamBean("not in", "and", "id", bean.getFilter(d.getTypeCode())));
+		}
+		beans.add(new PropParamBean("=", "and", "typeCode", bean.getTypeCode()));
+		beans.add(new PropParamBean("", "and", "scId", "not null"));
+		List<Dictionary> ds = (List<Dictionary>) baseService.getList("Dictionary", "o.xh asc", true, beans);
+		List<CheckBean> bs = new ArrayList<CheckBean>();
+		for (Dictionary dictionary : ds) {
+			CheckBean b = new CheckBean();
+			b.setLabel(dictionary.getName());
+			b.setValue(dictionary.getId());
+			bs.add(b);
+		}
+		return ResultBean.getSucess(bs);
 	}
 }

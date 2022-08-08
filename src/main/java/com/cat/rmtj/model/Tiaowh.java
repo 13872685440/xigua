@@ -1,4 +1,4 @@
-package com.cat.system.model;
+package com.cat.rmtj.model;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,24 +18,32 @@ import com.cat.boot.util.StringUtil;
 import com.cat.dictionary.model.Dictionary;
 
 @Entity
-@Table(name = "Org_Organ")
+@Table(name = "rmtj_tiaowh")
 @Inheritance(strategy = InheritanceType.JOINED)
 @BatchSize(size = 50)
 @DynamicInsert
-public class Organ extends BaseEntity {
+public class Tiaowh extends BaseEntity {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -3153252846240993265L;
-	
+	private static final long serialVersionUID = -9051760407524600989L;
+
 	/** 组织机构类型 */
 	@Column(length = 40)
 	private String orgtype;
 	
-	/** 管理单位（用来项目验收申请） */
+	/** 联系电话 */
 	@Column(length = 40)
-	private String gldw_id;
+	private String lxdh;
+	
+	/** 地址 */
+	@Column(length = 200)
+	private String address;
+	
+	/** 监控编号 */
+	@Column(length = 50)
+	private String jksbh;
 
 	/** 编码 作为ID使用 */
 	@Id
@@ -49,7 +57,7 @@ public class Organ extends BaseEntity {
 	private String clc;
 
 	/** 完整的名称 wholeName */
-	@Column(length = 1000, nullable = false)
+	@Column(length = 1000)
 	private String wn;
 
 	/** 名称 */
@@ -80,9 +88,6 @@ public class Organ extends BaseEntity {
 	
 	@Transient
 	private String scWnName;
-	
-	@Transient
-	private String gldw_name;
 
 	public String getClc() {
 		return clc;
@@ -165,7 +170,7 @@ public class Organ extends BaseEntity {
 
 	public String getScName() {
 		if(!StringUtil.isEmpty(this.scId)) {
-			Organ o = (Organ)getService().findById(Organ.class, this.scId);
+			Tiaowh o = (Tiaowh)getService().findById(Tiaowh.class, this.scId);
 			if(o!=null) {
 				return o.getName();
 			}
@@ -205,25 +210,27 @@ public class Organ extends BaseEntity {
 		this.scWnName = scWnName;
 	}
 
-	public String getGldw_id() {
-		return gldw_id;
+	public String getLxdh() {
+		return lxdh;
 	}
 
-	public void setGldw_id(String gldw_id) {
-		this.gldw_id = gldw_id;
+	public void setLxdh(String lxdh) {
+		this.lxdh = lxdh;
 	}
 
-	public String getGldw_name() {
-		if(!StringUtil.isEmpty(this.gldw_id)) {
-			Organ o = (Organ)getService().findById(Organ.class, this.gldw_id);
-			if(o!=null) {
-				return o.getName();
-			}
-		}
-		return gldw_name;
+	public String getAddress() {
+		return address;
 	}
 
-	public void setGldw_name(String gldw_name) {
-		this.gldw_name = gldw_name;
+	public void setAddress(String address) {
+		this.address = address;
+	}
+
+	public String getJksbh() {
+		return jksbh;
+	}
+
+	public void setJksbh(String jksbh) {
+		this.jksbh = jksbh;
 	}
 }

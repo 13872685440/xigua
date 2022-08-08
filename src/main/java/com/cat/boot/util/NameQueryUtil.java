@@ -130,6 +130,15 @@ public class NameQueryUtil {
 		}
 		return maps;
 	}
+	
+	public static Map<String, Object> setParams_s(String[] prams,Object[] values) {
+		Map<String, Object> maps = new HashMap<String, Object>();
+		for (int i = 0; i < prams.length; i++) {
+			String p = prams[i];
+			maps.put(p, values[i]);
+		}
+		return maps;
+	}
 
 	public static Map<String, String> setParam(String namespace, String xmlpath, String methodname, String orderby) {
 		Map<String, String> maps = new HashMap<String, String>();

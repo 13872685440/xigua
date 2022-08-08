@@ -198,9 +198,7 @@
 				='') or
 				lower(o.name) like
 				concat('%',concat(lower(:name )),'%')) 
-				and ((:code
-				is null or :code
-				='') or (o.id in (select x.userId from PostInformation x where x.isleaf='在职' and x.organId=:code)))
+				
 			</sql>
 			<countsql>select count(o.id) from User o where 1=1 
 				and ((:name is
@@ -208,18 +206,13 @@
 				='')
 				or lower(o.name) like
 				concat('%',concat(lower(:name
-				)),'%')) and ((:code
-				is null or :code
-				='') or (o.id in (select x.userId from PostInformation x where x.isleaf='在职' and x.organId=:code)))
+				)),'%')) 		
 			</countsql>
 			<!-- orderby 非必要节点 无默认值 -->
-			<orderby>o.ct desc</orderby>
+			<orderby>o.xh asc</orderby>
 			<!-- parm 非必要节点 根据需要添加 -->
 			<parm>
 				<name id="name">
-					<type>String</type>
-				</name>
-				<name id="code">
 					<type>String</type>
 				</name>
 			</parm>

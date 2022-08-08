@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.cat.boot.jsonbean.PropParamBean;
 import com.cat.boot.jsonbean.ResultBean;
 import com.cat.boot.service.BaseHome;
+import com.cat.boot.util.NameQueryUtil;
 import com.cat.boot.util.PassWordUtil;
 import com.cat.boot.util.RadomUtil;
 import com.cat.boot.util.StringUtil;
 import com.cat.system.jsonbean.UserBean;
 import com.cat.system.jsonbean.UserPwdBean;
+import com.cat.system.model.Role;
 import com.cat.system.model.User;
 
 @RestController
@@ -64,6 +66,12 @@ public class UserHome extends BaseHome<User>{
 		if(StringUtil.isEmpty(entity.getId())) {
 			makePwd(bean);
 		}
+
+		if(!StringUtil.isListEmpty(entity.getRole_ls())) {
+			List<Role> ds = (List<Role>) baseService.getList("Role", null, true,NameQueryUtil.setParams("id",entity.getRole_ls()));
+					
+			bean.getRoles().addAll(ds);
+		}
 		baseService.save(bean);
 		return ResultBean.getSucess(UserBean.setThis(bean));
 	}
@@ -97,5 +105,11 @@ public class UserHome extends BaseHome<User>{
 		} else {
 			return ResultBean.getResultBean("400", "原密码输入有误", "");
 		}
+	}
+	
+	@RequestMapping(value = "/getUser", method = RequestMethod.GET)
+	public String getUser(@RequestParam String id) {
+		User user = findById(id);
+		return ResultBean.getSucess(UserBean.setThis(user));
 	}
 }

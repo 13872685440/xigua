@@ -74,7 +74,7 @@ public class ProcessStep extends BaseEntity{
 	@Column(length = 10)
 	private Integer step;
 	
-	/** 当前审核人类型 1:用户 2:角色 3:其他*/
+	/** 当前审核人类型 1:用户 2:岗位角色 3:领导角色 4:其他 5:会签*/
 	@Column(length = 10)
 	private String shr_type;
 	
@@ -86,6 +86,10 @@ public class ProcessStep extends BaseEntity{
 	@Column(length = 1000)
 	private String roles;
 	
+	/** 当前审核领导角色 */
+	@Column(length = 1000)
+	private String ld_roles;
+	
 	/** 当前审核角色类型 1:上级部门 2:本级部门 3:指定部门 4:不指定部门*/
 	@Column(length = 10)
 	private String role_type;
@@ -93,6 +97,26 @@ public class ProcessStep extends BaseEntity{
 	/** 当前审核机构 与角色配套使用*/
 	@Column(length = 1000)
 	private String organIds;
+	
+	/** 超时时间 */
+	@Column(length = 10)
+	private Integer time_out;
+	
+	/** 是否需要督办 0 不督办 1 督办*/
+	@Column(length = 10)
+	private String has_supervise;
+	
+	/** 督办人类型 1=用户 2=角色*/
+	@Column(length = 10)
+	private String supervise_type;
+	
+	/** 督办人 用户IDs*/
+	@Column(length = 10)
+	private String supervise_userIds;
+	
+	/** 督办角色 */
+	@Column(length = 1000)
+	private String supervise_roles;
 	
 	@Transient
 	private String scName;
@@ -105,6 +129,9 @@ public class ProcessStep extends BaseEntity{
 	
 	@Transient
 	private List<String> role_s = new ArrayList<String>();
+	
+	@Transient
+	private List<String> ld_role_s = new ArrayList<String>();
 	
 	@Transient
 	private List<String> organ_s = new ArrayList<String>();
@@ -281,6 +308,29 @@ public class ProcessStep extends BaseEntity{
 		this.role_s = role_s;
 	}
 
+	public String getLd_roles() {
+		return ld_roles;
+	}
+
+	public void setLd_roles(String ld_roles) {
+		this.ld_roles = ld_roles;
+	}
+
+	public List<String> getLd_role_s() {
+		if(!StringUtil.isListEmpty(ld_role_s)) {
+			return ld_role_s;
+		}
+		if(!StringUtil.isEmpty(this.ld_roles)) {
+			ld_role_s.addAll(Arrays.asList(this.ld_roles.split(",")));
+			return ld_role_s;
+		}
+		return ld_role_s;
+	}
+
+	public void setLd_role_s(List<String> ld_role_s) {
+		this.ld_role_s = ld_role_s;
+	}
+
 	public List<String> getOrgan_s() {
 		if(!StringUtil.isListEmpty(organ_s)) {
 			return organ_s;
@@ -306,6 +356,46 @@ public class ProcessStep extends BaseEntity{
 
 	public void setSc_TableName(String sc_TableName) {
 		this.sc_TableName = sc_TableName;
+	}
+
+	public Integer getTime_out() {
+		return time_out;
+	}
+
+	public void setTime_out(Integer time_out) {
+		this.time_out = time_out;
+	}
+
+	public String getHas_supervise() {
+		return has_supervise;
+	}
+
+	public void setHas_supervise(String has_supervise) {
+		this.has_supervise = has_supervise;
+	}
+
+	public String getSupervise_type() {
+		return supervise_type;
+	}
+
+	public void setSupervise_type(String supervise_type) {
+		this.supervise_type = supervise_type;
+	}
+
+	public String getSupervise_userIds() {
+		return supervise_userIds;
+	}
+
+	public void setSupervise_userIds(String supervise_userIds) {
+		this.supervise_userIds = supervise_userIds;
+	}
+
+	public String getSupervise_roles() {
+		return supervise_roles;
+	}
+
+	public void setSupervise_roles(String supervise_roles) {
+		this.supervise_roles = supervise_roles;
 	}
 
 	@Override

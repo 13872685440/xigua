@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rmtj>
+	<Shouli>
+		<query id="Shouli_mainQuery">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>false</isnative>
+			<sql>select o from Shouli o where 1=1 
+			</sql>
+			<countsql>select count(o.id) from Shouli o where 1=1 
+			</countsql>
+			<!-- orderby 非必要节点 无默认值 -->
+			<orderby>o.ct asc</orderby>
+		</query>
+	</Shouli>
+	<Tiaowh>
+		<query id="Tiaowh_mainQuery">
+			<!-- isnative 非必要节点 默认为false -->
+			<isnative>false</isnative>
+			<sql>select o from Tiaowh o where 1=1 
+			</sql>
+			<countsql>select count(o.id) from Tiaowh o where 1=1 
+			</countsql>
+			<!-- orderby 非必要节点 无默认值 -->
+			<orderby>o.ct asc</orderby>
+		</query>
+	</Tiaowh>
+</rmtj>

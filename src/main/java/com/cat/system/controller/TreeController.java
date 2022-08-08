@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cat.boot.jsonbean.CheckBean;
 import com.cat.boot.jsonbean.PropBean;
 import com.cat.boot.jsonbean.PropParamBean;
 import com.cat.boot.jsonbean.QueryParmBean;
@@ -55,7 +56,7 @@ public class TreeController {
 				"o.id,o.name,o.sc_id", beans);
 		List<Object[]> persons = (List<Object[]>) baseService.getList("User", "system",
 				"User_by_PostInformation",
-				NameQueryUtil.setParams("leafs", Arrays.asList(new String[] { "在职" })));
+				NameQueryUtil.setParams("leafs", Arrays.asList(new String[] { "LF001","LF002" })));
 		if (!StringUtil.isListEmpty(persons)) {
 			orgs.addAll(persons);
 		}
@@ -66,9 +67,43 @@ public class TreeController {
 		return ResultBean.getSucess(new ArrayList<TreeBean>());
 	}
 	
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/getList", method = RequestMethod.GET)
 	public String getList(TreeParmBean bean) {
+		List<Object[]> orgs = getL(bean);
+
+		return toPropBean(orgs);
+	}
+	
+	@RequestMapping(value = "/getList_CheckBox", method = RequestMethod.GET)
+	public String getList_CheckBox(TreeParmBean bean) {
+		List<Object[]> orgs = getL(bean);
+
+		return toCheckBean(orgs);
+	}
+	
+	@RequestMapping(value = "/getList_NQ", method = RequestMethod.GET)
+	public String getList_NQ(QueryParmBean bean) {
+		List<Object[]> orgs = getNq(bean);
+
+		return toPropBean(orgs);
+	}
+	
+	@RequestMapping(value = "/getList_NQ_CheckBox", method = RequestMethod.GET)
+	public String getList_NQ_CheckBox(QueryParmBean bean) {
+		List<Object[]> orgs = getNq(bean);
+		return toCheckBean(orgs);
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Object[]> getNq(QueryParmBean bean){
+		List<Object[]> orgs = (List<Object[]>) baseService.getList(bean.getNamespace(), 
+				bean.getXmlpath(),
+				bean.getMethodname(),bean.getMap());
+		return orgs;
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<Object[]> getL(TreeParmBean bean){
 		List<PropParamBean> beans = new ArrayList<PropParamBean>();
 		if (!StringUtil.isEmpty(bean.getRoot())) {
 			beans.add(new PropParamBean("like", "and", StringUtil.isEmpty(bean.getKey()) ? "id" : bean.getKey(), bean.getRoot() + "%"));
@@ -76,7 +111,10 @@ public class TreeController {
 		List<Object[]> orgs = (List<Object[]>) baseService.getList(bean.getTable_name(), 
 				StringUtil.isEmpty(bean.getSort()) ? "o.id asc" : bean.getSort(), true,
 				StringUtil.isEmpty(bean.getProps()) ? "o.id,o.name" : bean.getProps(), beans);
-
+		return orgs;
+	}
+	
+	private String toPropBean(List<Object[]> orgs) {
 		if (!StringUtil.isListEmpty(orgs)) {
 			List<PropBean> bs = new ArrayList<PropBean>();
 			for (Object[] o : orgs) {
@@ -94,42 +132,18 @@ public class TreeController {
 		return ResultBean.getResultBean("200", "", "");
 	}
 	
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/getList_NQ", method = RequestMethod.GET)
-	public String getList_NQ(QueryParmBean bean) {
-		List<Object[]> orgs = (List<Object[]>) baseService.getList(bean.getNamespace(), 
-				bean.getXmlpath(),
-				bean.getMethodname(),bean.getMap());
-
+	private String toCheckBean(List<Object[]> orgs) {
 		if (!StringUtil.isListEmpty(orgs)) {
-			List<PropBean> bs = new ArrayList<PropBean>();
+			List<CheckBean> bs = new ArrayList<CheckBean>();
 			for (Object[] o : orgs) {
-				PropBean b = new PropBean();
-				if(o.length==3) {
-					b.setOther(String.valueOf(o[2]));
-				}
-				b.setId(String.valueOf(o[0]));
-				b.setName(String.valueOf(o[1]));
+				CheckBean b = new CheckBean();
+				b.setLabel(String.valueOf(o[1]));
+				b.setValue(String.valueOf(o[0]));
 				bs.add(b);
 			}
 			return ResultBean.getSucess(bs);
 		}
 		
 		return ResultBean.getResultBean("200", "", "");
-	}
-	
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/getList_S", method = RequestMethod.GET)
-	public String getList_S(QueryParmBean bean) {
-		List<String> orgs = (List<String>) baseService.getList(bean.getNamespace(), 
-				bean.getXmlpath(),
-				bean.getMethodname(),bean.getMap());
-
-		if (!StringUtil.isListEmpty(orgs)) {
-			
-			return ResultBean.getSucess(orgs);
-		}
-		
-		return ResultBean.getSucess(new ArrayList<String>());
 	}
 }

@@ -67,4 +67,20 @@
 			<orderby>o.ct desc</orderby>
 		</query>
 	</TaskExt>
+	<Remind>
+		<query id="Remind_mainQuery">
+			<sql>select o from Remind o where 1=1 
+				and (o.task_id in (select x from TaskExt x where x.taskType !='已办'))
+				and
+				(o.jsr_id = #userId#)
+			</sql>
+			<countsql>select count(o.id) from Remind o where 1=1 
+				and (o.task_id in (select x from TaskExt x where x.taskType !='已办'))
+				and
+				(o.jsr_id = #userId#)
+			</countsql>
+			<!-- orderby 非必要节点 无默认值 -->
+			<orderby>o.ct desc</orderby>
+		</query>
+	</Remind>
 </task>

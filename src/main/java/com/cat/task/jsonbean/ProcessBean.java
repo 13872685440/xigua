@@ -1,8 +1,13 @@
 package com.cat.task.jsonbean;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class ProcessBean {
 
 	private String step_id;
+	
+	private String step_name;
 	
 	private String app_id;
 	
@@ -15,6 +20,11 @@ public class ProcessBean {
 	private String task_id;
 	
 	private String shyj;
+	
+	// 标志 0=初始提交 00=重新提交
+	private String biaozhi;
+	
+	private Map<String,Object> maps = new HashMap<String,Object>();
 
 	public String getStep_id() {
 		return step_id;
@@ -64,6 +74,14 @@ public class ProcessBean {
 		this.task_id = task_id;
 	}
 
+	public String getStep_name() {
+		return step_name;
+	}
+
+	public void setStep_name(String step_name) {
+		this.step_name = step_name;
+	}
+
 	public String getShyj() {
 		return shyj;
 	}
@@ -71,4 +89,21 @@ public class ProcessBean {
 	public void setShyj(String shyj) {
 		this.shyj = shyj;
 	}
+
+	public Map<String, Object> getMaps() {
+		return maps;
+	}
+
+	public void setMaps(Map<String, Object> maps) {
+		this.maps = maps;
+	}
+
+	public String getBiaozhi() {
+		return biaozhi;
+	}
+
+	public void setBiaozhi(String biaozhi) {
+		this.biaozhi = biaozhi;
+	}
+
 }

@@ -27,6 +27,12 @@ public class UserBean extends BaseAppBean{
 	
 	private String radom;
 	
+	private Integer xh;
+	
+	private String organ_name;
+	
+	private String duty;
+	
 	private List<String> role_ls = new ArrayList<String>();
 	
 	public String getName() {
@@ -84,6 +90,10 @@ public class UserBean extends BaseAppBean{
 		bean.setId(entity.getId());
 		bean.setRadom(entity.getRadom());
 		bean.getRole_ls().clear();
+		bean.setXh(entity.getXh());
+		bean.setOrgan_name(StringUtil.isEmpty((String)entity.getMaps().get("organ_name")) ? "" : (String)entity.getMaps().get("organ_name"));
+		bean.setDuty(StringUtil.isEmpty((String)entity.getMaps().get("duty")) ? "" : (String)entity.getMaps().get("duty"));
+		
 		
 		if(entity.getRoles()!=null && !entity.getRoles().isEmpty()) {
 			for (Role d : entity.getRoles()) {
@@ -108,5 +118,30 @@ public class UserBean extends BaseAppBean{
 		
 		bean.setName(entity.getName());
 		bean.setPhone(entity.getPhone());
+		bean.setXh(entity.getXh());
+	}
+
+	public Integer getXh() {
+		return xh;
+	}
+
+	public void setXh(Integer xh) {
+		this.xh = xh;
+	}
+
+	public String getOrgan_name() {
+		return organ_name;
+	}
+
+	public void setOrgan_name(String organ_name) {
+		this.organ_name = organ_name;
+	}
+
+	public String getDuty() {
+		return duty;
+	}
+
+	public void setDuty(String duty) {
+		this.duty = duty;
 	}
 }

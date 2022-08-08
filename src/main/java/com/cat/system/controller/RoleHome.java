@@ -17,6 +17,7 @@ import com.cat.boot.util.NameQueryUtil;
 import com.cat.boot.util.StringUtil;
 import com.cat.system.model.Role;
 import com.cat.system.model.RoleApp;
+import com.cat.system.model.RoleOrgan;
 
 @RestController
 @RequestMapping("/role")
@@ -49,6 +50,17 @@ public class RoleHome extends BaseHome<Role> {
 			for (String a : entity.getApp_data()) {
 				RoleApp r = new RoleApp();
 				r.setApp(a);
+				r.setRole(entity.getId());
+				baseService.save(r);
+			}
+		}
+		
+		baseService.delete4Prop("sys_role_organ", true, NameQueryUtil.setParams("role", entity.getId()));
+
+		if (!StringUtil.isListEmpty(entity.getOrg_data())) {
+			for (String a : entity.getOrg_data()) {
+				RoleOrgan r = new RoleOrgan();
+				r.setOrg_id(a);
 				r.setRole(entity.getId());
 				baseService.save(r);
 			}

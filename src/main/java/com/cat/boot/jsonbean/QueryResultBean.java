@@ -13,6 +13,8 @@ public class QueryResultBean {
 	private Long totalCount;
 
 	private Object data;
+	
+	private Object other;
 
 	public Long getPageSize() {
 		return pageSize;
@@ -76,4 +78,13 @@ public class QueryResultBean {
 		System.out.println(json);
 		return json;
 	}
+
+	public Object getOther() {
+		return other;
+	}
+
+	public void setOther(Object other) {
+		this.other = other;
+	}
+
 }

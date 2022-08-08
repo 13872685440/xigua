@@ -307,7 +307,7 @@ public class AppTreeInfoBean {
 		}
 		return bs;
 	}
-
+ 
 	public static List<AppTreeInfoBean> iniAppTree_App(List<AppTree> entitys) {
 		List<AppTreeInfoBean> bs = new ArrayList<AppTreeInfoBean>();
 		for (AppTree entity : entitys) {

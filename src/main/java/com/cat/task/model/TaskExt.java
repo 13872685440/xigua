@@ -1,6 +1,7 @@
 package com.cat.task.model;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,6 +20,7 @@ import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.cat.boot.model.BaseEntity;
+import com.cat.boot.util.CalendarUtil;
 import com.cat.boot.util.NameQueryUtil;
 import com.cat.boot.util.StringUtil;
 import com.cat.system.model.User;
@@ -69,6 +71,13 @@ public class TaskExt extends BaseEntity{
 	@Enumerated(EnumType.STRING)
 	@Column(name = "task_type")
 	private TaskType taskType = TaskType.待办;
+	
+	/** 超时时间 */
+	@Column(length = 40)
+	private String time_out;
+	
+	@Transient
+	private String time_out_type;
 	
 	@Transient
 	private String task_name;
@@ -158,7 +167,9 @@ public class TaskExt extends BaseEntity{
 	public String getTask_name() {
 		if(!StringUtil.isEmpty(this.step_id)) {
 			ProcessStep p = (ProcessStep)getService().findById(ProcessStep.class, this.step_id.substring(0, 4));
-			return p.getName();
+			if(p!=null) {
+				return p.getName();
+			}
 		}
 		return task_name;
 	}
@@ -173,7 +184,9 @@ public class TaskExt extends BaseEntity{
 				return "申请人";
 			} else {
 				ProcessStep p = (ProcessStep)getService().findById(ProcessStep.class, this.step_id);
-				return p.getName();
+				if(p!=null) {
+					return p.getName();
+				}
 			}
 		}
 		return step_name;
@@ -261,10 +274,35 @@ public class TaskExt extends BaseEntity{
 		this.transactorgroups_name = transactorgroups_name;
 	}
 
+	public String getTime_out() {
+		return time_out;
+	}
+
+	public void setTime_out(String time_out) {
+		this.time_out = time_out;
+	}
+	
+	public String getTime_out_type() {
+		if(StringUtil.isEmpty(this.time_out)) {
+			return "99";
+		} else {
+			long x = CalendarUtil.compareToTime(this.time_out, CalendarUtil.getYyyyMmDdHHmmss(Calendar.getInstance()));
+			if(x<=0) {
+				return "1";
+			} else if(x>0 && x<60*60*1000) {
+				return "2";
+			} else {
+				return "99";
+			}
+		}
+	}
+
 	private void initMap(Map<String,String> params_map,ProcessStep p) {
 		ProcessStep pe = new ProcessStep();
-		if(!StringUtil.isEmpty(p.getScId())) {
+		if(p!=null && !StringUtil.isEmpty(p.getScId())) {
 			pe = (ProcessStep)getService().findById(ProcessStep.class, p.getScId());
+		} else {
+			//return;
 		}
 		params_map.put("component_path", StringUtil.isEmpty(p.getComponent()) ? pe.getComponent() : p.getComponent());
 		params_map.put("service_path", StringUtil.isEmpty(p.getService_path()) ? pe.getService_path() : p.getService_path());

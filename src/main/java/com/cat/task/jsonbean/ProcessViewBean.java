@@ -9,6 +9,13 @@ public class ProcessViewBean {
 	
 	private Integer current;
 	
+	private Integer comment_current;
+
+	private List<CommentBean> comments = new ArrayList<CommentBean>();
+	
+	private List<CommentBean> prcocess_steps = new ArrayList<CommentBean>();
+	
+	// 废弃
 	private List<ProcessStepBean> steps = new ArrayList<ProcessStepBean>();
 
 	public String getTitle() {
@@ -33,6 +40,30 @@ public class ProcessViewBean {
 
 	public void setSteps(List<ProcessStepBean> steps) {
 		this.steps = steps;
+	}
+
+	public List<CommentBean> getComments() {
+		return comments;
+	}
+
+	public void setComments(List<CommentBean> comments) {
+		this.comments = comments;
+	}
+
+	public Integer getComment_current() {
+		return comment_current;
+	}
+
+	public void setComment_current(Integer comment_current) {
+		this.comment_current = comment_current;
+	}
+
+	public List<CommentBean> getPrcocess_steps() {
+		return prcocess_steps;
+	}
+
+	public void setPrcocess_steps(List<CommentBean> prcocess_steps) {
+		this.prcocess_steps = prcocess_steps;
 	}
 
 }
