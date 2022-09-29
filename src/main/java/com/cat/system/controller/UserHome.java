@@ -66,7 +66,7 @@ public class UserHome extends BaseHome<User>{
 		if(StringUtil.isEmpty(entity.getId())) {
 			makePwd(bean);
 		}
-
+		bean.getRoles().clear();
 		if(!StringUtil.isListEmpty(entity.getRole_ls())) {
 			List<Role> ds = (List<Role>) baseService.getList("Role", null, true,NameQueryUtil.setParams("id",entity.getRole_ls()));
 					

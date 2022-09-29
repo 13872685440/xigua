@@ -47,7 +47,7 @@ public abstract class BaseNqtQuery<T> extends BaseQuery<T> {
 			for (String xx : xxs) {
 				String[] yys = xx.split("\\.");
 				// 查询关联表是否有信息
-				List<Object[]> os = (List<Object[]>)baseService.getList(yys[0], null, true, yys[1],
+				List<Object[]> os = (List<Object[]>)baseService.getList(yys[0], null, false, yys[1],
 						NameQueryUtil.setParams(yys[1],id));
 				if(!StringUtil.isListEmpty(os)) {
 					return ResultBean.getResultBean("400", "", "删除失败");
